@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ultimate Quiz Challenge 🎮</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f6f8; text-align: center; }
+    .container { max-width: 700px; margin: auto; background: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+    h1 { color: #2c3e50; }
+    .btn { display: block; margin: 10px auto; padding: 10px 20px; border: none; border-radius: 10px; background: #3498db; color: #fff; cursor: pointer; font-size: 16px; }
+    .btn:hover { background: #2980b9; }
+    .hidden { display: none; }
+    .options button { width: 100%; margin: 5px 0; }
+    .feedback { margin-top: 10px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎮 Ultimate Quiz Challenge 🎮</h1>
+    <p id="instructions">📔 Choose a category to begin!</p>
+
+    <!-- Categories -->
+    <div id="categories">
+      <button class="btn" onclick="startQuiz(1)">1. General Knowledge</button>
+      <button class="btn" onclick="startQuiz(2)">2. Sports and Culture</button>
+      <button class="btn" onclick="startQuiz(3)">3. Science and Nature</button>
+      <button class="btn" onclick="startQuiz(4)">4. Movies and TV</button>
+      <button class="btn" onclick="startQuiz(5)">5. Random Mix</button>
+    </div>
+
+    <!-- Quiz Area -->
+    <div id="quizArea" class="hidden">
+      <h2 id="categoryName"></h2>
+      <p id="questionText"></p>
+      <div id="options" class="options"></div>
+      <p id="feedback" class="feedback"></p>
+      <button id="nextBtn" class="btn hidden" onclick="nextQuestion()">Next Question</button>
+    </div>
+
+    <!-- Result -->
+    <div id="resultArea" class="hidden">
+      <h2>Quiz Results 🎉</h2>
+      <p id="finalScore"></p>
+      <p id="remark"></p>
+      <button class="btn" onclick="restart()">Play Again</button>
+    </div>
+  </div>
+
+  <script>
+    const data = {
+      1: { name: "General Knowledge", questions: [
+        { q:"What is the capital of USA?", opts:["London","Berlin","Paris","Washington"], ans:3 },
+        { q:"Largest planet?", opts:["Earth","Saturn","Jupiter","Mars"], ans:2 },
+        { q:"Father of Indian Constitution?", opts:["Nehru","Gandhi","B.R Ambedkar","Sardar Patel"], ans:2 }
+      ]},
+      2: { name: "Sports and Culture", questions: [
+        { q:"Most popular sport?", opts:["Football","Chess","Cricket","Hockey"], ans:0 },
+        { q:"First Summer Olympics?", opts:["1896","1904","1948","1971"], ans:0 }
+      ]},
+      3: { name: "Science and Nature", questions: [
+        { q:"Unit of Electric Power?", opts:["Watt","Joule","Pascal","Newton"], ans:0 },
+        { q:"How many states in India?", opts:["29","27","28","25"], ans:2 }
+      ]},
+      4: { name: "Movies and TV", questions: [
+        { q:"Who played Iron Man?", opts:["Chris Evans","Robert Downey","Chris Hemsworth","Mark Ruffalo"], ans:1 },
+        { q:"Snowman Olaf is from?", opts:["Toy Story","Shrek","Frozen","Finding Nemo"], ans:2 }
+      ]},
+      5: { name: "Random Mix", questions: [] }
+    };
+    data[5].questions = [...data[1].questions, ...data[2].questions, ...data[3].questions, ...data[4].questions];
+
+    let currentCategory, currentIndex, score;
+
+    function startQuiz(cat) {
+      currentCategory = data[cat];
+      score = 0; currentIndex = 0;
+      document.getElementById("categories").classList.add("hidden");
+      document.getElementById("quizArea").classList.remove("hidden");
+      document.getElementById("categoryName").innerText = currentCategory.name;
+      showQuestion();
+    }
+
+    function showQuestion() {
+      const q = currentCategory.questions[currentIndex];
+      document.getElementById("questionText").innerText = `Q${currentIndex+1}: ${q.q}`;
+      const optionsDiv = document.getElementById("options");
+      optionsDiv.innerHTML = "";
+      q.opts.forEach((opt,i)=>{
+        const btn = document.createElement("button");
+        btn.className="btn"; btn.innerText=opt;
+        btn.onclick=()=>checkAnswer(i);
+        optionsDiv.appendChild(btn);
+      });
+      document.getElementById("feedback").innerText="";
+      document.getElementById("nextBtn").classList.add("hidden");
+    }
+
+    function checkAnswer(choice) {
+      const q = currentCategory.questions[currentIndex];
+      if(choice===q.ans){ score+=10; document.getElementById("feedback").innerText="✅ Correct! +10 points"; }
+      else { document.getElementById("feedback").innerText=`❌ Wrong! Correct: ${q.opts[q.ans]}`; }
+      document.getElementById("nextBtn").classList.remove("hidden");
+    }
+
+    function nextQuestion() {
+      currentIndex++;
+      if(currentIndex<currentCategory.questions.length) showQuestion();
+      else endQuiz();
+    }
+
+    function endQuiz() {
+      document.getElementById("quizArea").classList.add("hidden");
+      document.getElementById("resultArea").classList.remove("hidden");
+      document.getElementById("finalScore").innerText=`Score: ${score}`;
+      const total=currentCategory.questions.length*10;
+      const pct=(score/total)*100;
+      if(pct===100) document.getElementById("remark").innerText="🌟 Perfect! You're a quiz master!";
+      else if(pct>=80) document.getElementById("remark").innerText="👍 Good job!";
+      else if(pct>=40) document.getElementById("remark").innerText="🙂 Not bad!";
+      else document.getElementById("remark").innerText="📚 Keep learning!";
+    }
+
+    function restart() {
+      document.getElementById("resultArea").classList.add("hidden");
+      document.getElementById("categories").classList.remove("hidden");
+    }
+  </script>
+</body>
+</html>
