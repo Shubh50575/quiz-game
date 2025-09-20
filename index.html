@@ -5,126 +5,173 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ultimate Quiz Challenge 🎮</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #f4f6f8; text-align: center; }
-    .container { max-width: 700px; margin: auto; background: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
-    h1 { color: #2c3e50; }
-    .btn { display: block; margin: 10px auto; padding: 10px 20px; border: none; border-radius: 10px; background: #3498db; color: #fff; cursor: pointer; font-size: 16px; }
-    .btn:hover { background: #2980b9; }
-    .hidden { display: none; }
-    .options button { width: 100%; margin: 5px 0; }
-    .feedback { margin-top: 10px; font-weight: bold; }
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    header {
+      background: #2c3e50;
+      color: #fff;
+      padding: 20px;
+      font-size: 1.5rem;
+    }
+    .container {
+      margin: 40px auto;
+      max-width: 600px;
+      padding: 20px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #2c3e50;
+    }
+    button {
+      display: inline-block;
+      margin: 10px;
+      padding: 12px 20px;
+      background: #27ae60;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #219150;
+    }
+    .question {
+      margin: 20px 0;
+      font-size: 1.2rem;
+    }
+    .options button {
+      display: block;
+      width: 100%;
+      margin: 8px 0;
+      background: #3498db;
+    }
+    .options button:hover {
+      background: #2980b9;
+    }
+    .result {
+      font-size: 1.3rem;
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>🎮 Ultimate Quiz Challenge 🎮</h1>
-    <p id="instructions">📔 Choose a category to begin!</p>
+  <header>
+    🎮 Ultimate Quiz Challenge
+  </header>
 
-    <!-- Categories -->
-    <div id="categories">
-      <button class="btn" onclick="startQuiz(1)">1. General Knowledge</button>
-      <button class="btn" onclick="startQuiz(2)">2. Sports and Culture</button>
-      <button class="btn" onclick="startQuiz(3)">3. Science and Nature</button>
-      <button class="btn" onclick="startQuiz(4)">4. Movies and TV</button>
-      <button class="btn" onclick="startQuiz(5)">5. Random Mix</button>
-    </div>
-
-    <!-- Quiz Area -->
-    <div id="quizArea" class="hidden">
-      <h2 id="categoryName"></h2>
-      <p id="questionText"></p>
-      <div id="options" class="options"></div>
-      <p id="feedback" class="feedback"></p>
-      <button id="nextBtn" class="btn hidden" onclick="nextQuestion()">Next Question</button>
-    </div>
-
-    <!-- Result -->
-    <div id="resultArea" class="hidden">
-      <h2>Quiz Results 🎉</h2>
-      <p id="finalScore"></p>
-      <p id="remark"></p>
-      <button class="btn" onclick="restart()">Play Again</button>
-    </div>
+  <div class="container" id="quiz-container">
+    <h2>Welcome!</h2>
+    <p>Choose a category to begin:</p>
+    <button onclick="startQuiz(1)">General Knowledge</button>
+    <button onclick="startQuiz(2)">Sports and Culture</button>
+    <button onclick="startQuiz(3)">Science and Nature</button>
+    <button onclick="startQuiz(4)">Movies and TV</button>
+    <button onclick="startQuiz(5)">Random Mix</button>
   </div>
 
   <script>
-    const data = {
-      1: { name: "General Knowledge", questions: [
-        { q:"What is the capital of USA?", opts:["London","Berlin","Paris","Washington"], ans:3 },
-        { q:"Largest planet?", opts:["Earth","Saturn","Jupiter","Mars"], ans:2 },
-        { q:"Father of Indian Constitution?", opts:["Nehru","Gandhi","B.R Ambedkar","Sardar Patel"], ans:2 }
+    const questionsData = {
+      1: {name:"General Knowledge", questions:[
+        {q:"What is the capital of USA?", options:["London","Berlin","Paris","Washington"], answer:"Washington"},
+        {q:"Which is the largest planet?", options:["Earth","Saturn","Jupiter","Mars"], answer:"Jupiter"},
+        {q:"Who is the father of Indian Constitution?", options:["Nehru","Gandhi","B.R Ambedkar","Patel"], answer:"B.R Ambedkar"},
+        {q:"What is the largest ocean?", options:["Atlantic","Indian","Pacific","Arctic"], answer:"Pacific"},
+        {q:"Who wrote the national song of India?", options:["Tagore","Bankim Chandra","Bose","Lala Lajpat Rai"], answer:"Bankim Chandra"}
       ]},
-      2: { name: "Sports and Culture", questions: [
-        { q:"Most popular sport?", opts:["Football","Chess","Cricket","Hockey"], ans:0 },
-        { q:"First Summer Olympics?", opts:["1896","1904","1948","1971"], ans:0 }
+      2: {name:"Sports and Culture", questions:[
+        {q:"Which sport is most popular?", options:["Football","Chess","Cricket","Hockey"], answer:"Football"},
+        {q:"When was first modern Olympics?", options:["1896","1904","1948","1971"], answer:"1896"},
+        {q:"What game is 'sport of kings'?", options:["Cricket","Volleyball","Ludo","Chess"], answer:"Chess"},
+        {q:"Which sport has Stanley Cup?", options:["Football","Hockey","Golf","Tennis"], answer:"Hockey"},
+        {q:"When did India win 1st ICC World Cup?", options:["1983","1999","2011","1948"], answer:"1983"}
       ]},
-      3: { name: "Science and Nature", questions: [
-        { q:"Unit of Electric Power?", opts:["Watt","Joule","Pascal","Newton"], ans:0 },
-        { q:"How many states in India?", opts:["29","27","28","25"], ans:2 }
+      3: {name:"Science and Nature", questions:[
+        {q:"Unit of Electric Power?", options:["Watt","Joule","Pascal","Newton"], answer:"Watt"},
+        {q:"Who built Taj Mahal?", options:["Shah Jahan","Akbar","Humayun","Babur"], answer:"Shah Jahan"},
+        {q:"Which river is 'Ganga of South'?", options:["Kaveri","Godavari","Krishna","Brahmaputra"], answer:"Godavari"},
+        {q:"How many states in India?", options:["29","27","28","25"], answer:"28"},
+        {q:"First PM of India?", options:["Nehru","Patel","Gandhi","Bhagat Singh"], answer:"Nehru"}
       ]},
-      4: { name: "Movies and TV", questions: [
-        { q:"Who played Iron Man?", opts:["Chris Evans","Robert Downey","Chris Hemsworth","Mark Ruffalo"], ans:1 },
-        { q:"Snowman Olaf is from?", opts:["Toy Story","Shrek","Frozen","Finding Nemo"], ans:2 }
+      4: {name:"Movies and TV", questions:[
+        {q:"Who played Iron Man?", options:["Evans","Downey","Hemsworth","Ruffalo"], answer:"Downey"},
+        {q:"Chemistry teacher turned drug dealer?", options:["Breaking Bad","Walking Dead","Game of Thrones","Stranger Things"], answer:"Breaking Bad"},
+        {q:"First Star Wars movie?", options:["Empire Strikes Back","Return of Jedi","A New Hope","Phantom Menace"], answer:"A New Hope"},
+        {q:"Who played Katniss?", options:["Watson","Lawrence","Johansson","Stone"], answer:"Lawrence"},
+        {q:"Movie with Olaf snowman?", options:["Toy Story","Shrek","Frozen","Nemo"], answer:"Frozen"}
       ]},
-      5: { name: "Random Mix", questions: [] }
+      5: {name:"Random Mix", questions:[]}
     };
-    data[5].questions = [...data[1].questions, ...data[2].questions, ...data[3].questions, ...data[4].questions];
 
-    let currentCategory, currentIndex, score;
+    // Mix category includes all
+    questionsData[5].questions = [
+      ...questionsData[1].questions,
+      ...questionsData[2].questions,
+      ...questionsData[3].questions,
+      ...questionsData[4].questions
+    ];
 
-    function startQuiz(cat) {
-      currentCategory = data[cat];
-      score = 0; currentIndex = 0;
-      document.getElementById("categories").classList.add("hidden");
-      document.getElementById("quizArea").classList.remove("hidden");
-      document.getElementById("categoryName").innerText = currentCategory.name;
+    let currentCategory = null;
+    let currentIndex = 0;
+    let score = 0;
+
+    function startQuiz(category) {
+      currentCategory = questionsData[category];
+      currentIndex = 0;
+      score = 0;
+      shuffle(currentCategory.questions);
       showQuestion();
     }
 
     function showQuestion() {
+      const container = document.getElementById("quiz-container");
+      if (currentIndex >= currentCategory.questions.length) {
+        container.innerHTML = `
+          <h2>Quiz Finished! 🎉</h2>
+          <p class="result">Category: ${currentCategory.name}</p>
+          <p class="result">Your Score: ${score}/${currentCategory.questions.length * 10}</p>
+          <button onclick="location.reload()">Play Again</button>
+        `;
+        return;
+      }
+
       const q = currentCategory.questions[currentIndex];
-      document.getElementById("questionText").innerText = `Q${currentIndex+1}: ${q.q}`;
-      const optionsDiv = document.getElementById("options");
-      optionsDiv.innerHTML = "";
-      q.opts.forEach((opt,i)=>{
-        const btn = document.createElement("button");
-        btn.className="btn"; btn.innerText=opt;
-        btn.onclick=()=>checkAnswer(i);
-        optionsDiv.appendChild(btn);
-      });
-      document.getElementById("feedback").innerText="";
-      document.getElementById("nextBtn").classList.add("hidden");
+      container.innerHTML = `
+        <h2>${currentCategory.name} Quiz</h2>
+        <div class="question">Q${currentIndex+1}. ${q.q}</div>
+        <div class="options">
+          ${q.options.map(opt => `<button onclick="checkAnswer('${opt}')">${opt}</button>`).join("")}
+        </div>
+        <p>Score: ${score}</p>
+      `;
     }
 
-    function checkAnswer(choice) {
+    function checkAnswer(answer) {
       const q = currentCategory.questions[currentIndex];
-      if(choice===q.ans){ score+=10; document.getElementById("feedback").innerText="✅ Correct! +10 points"; }
-      else { document.getElementById("feedback").innerText=`❌ Wrong! Correct: ${q.opts[q.ans]}`; }
-      document.getElementById("nextBtn").classList.remove("hidden");
-    }
-
-    function nextQuestion() {
+      if (answer === q.answer) {
+        score += 10;
+        alert("✅ Correct! +10 points");
+      } else {
+        alert("❌ Wrong! Correct answer: " + q.answer);
+      }
       currentIndex++;
-      if(currentIndex<currentCategory.questions.length) showQuestion();
-      else endQuiz();
+      showQuestion();
     }
 
-    function endQuiz() {
-      document.getElementById("quizArea").classList.add("hidden");
-      document.getElementById("resultArea").classList.remove("hidden");
-      document.getElementById("finalScore").innerText=`Score: ${score}`;
-      const total=currentCategory.questions.length*10;
-      const pct=(score/total)*100;
-      if(pct===100) document.getElementById("remark").innerText="🌟 Perfect! You're a quiz master!";
-      else if(pct>=80) document.getElementById("remark").innerText="👍 Good job!";
-      else if(pct>=40) document.getElementById("remark").innerText="🙂 Not bad!";
-      else document.getElementById("remark").innerText="📚 Keep learning!";
-    }
-
-    function restart() {
-      document.getElementById("resultArea").classList.add("hidden");
-      document.getElementById("categories").classList.remove("hidden");
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
     }
   </script>
 </body>
 </html>
+
